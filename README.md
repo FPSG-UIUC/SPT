@@ -60,7 +60,7 @@ Running the gem5 executable directly is a bit complicated since there are some l
 ### Configuration Options for Helper Script
 
 Parameter | Values | Description | Requirements/Restrictions
---- | --- | --- | --- | ---
+--- | --- | --- | ---
 `--executable` | Filesystem Path | The executable you want to run with gem5 | Required
 `--enable-spt` | n/a | Enables SPT's protection mechanism (if this is left out then then you have the `UnsafeBaseline` | Not required
 `--threat-model` | `spectre`, `futuristic` | Which threat model to simulate under (see paper for details) | Required if `--enable-spt` is specified
@@ -71,7 +71,7 @@ Parameter | Values | Description | Requirements/Restrictions
 ### Miscellaneous Options for Helper Script
 
 Parameter | Values | Description | Requirements/Restrictions
---- | --- | --- | --- | ---
+--- | --- | --- | --- |
 `--track-insts` | n/a | If this is specified, then gem5 will output detailed taint tracking information. This is recommended if you wish to observe the flow of taint/untaint through your program. Note that a _lot_ of output will be produced! | Can only be specified if `--enable-spt` is specified
 `--output-dir` | Filesystem Path | This is the directory where the output `stats.txt` file will be generated. Note that whatever directory you specify here will be created. If unspecified, then it will create a directory `m5out` in `$SPT` and put `stats.txt` there. |
 
