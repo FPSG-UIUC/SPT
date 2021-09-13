@@ -35,7 +35,7 @@ git clone https://github.com/FPSG-UIUC/SPT.git
 
 Tool | Version | Notes
 --- | --- | ---
-Ubuntu | 16.04 | :warning: Unfortunately the repo doesn't appear to run correctly when tested on Ubuntu 20.04 (we haven't tested Ubuntu 18). If you run into a similar issue, we suggest using a docker container that has the correct version of Ubuntu.
+Ubuntu | 16.04 | :warning: Unfortunately the repo doesn't appear to run correctly when tested on Ubuntu 20.04 (we haven't tested Ubuntu 18). If you run into a similar issue, we suggest using a Docker container that has the correct version of Ubuntu.
 Python | 2.7 | This is needed to build the repo. You won't invoke this manually.
 Python | 3.5+ | You will manually invoke this to run the helper script.
 SCons | 2.5.1 | :warning: SCons versions 3 and beyond will use Python 3 under the hood and will cause build failures, so **make sure you use this version!** It can't be found with Anaconda, but it _can_ be found with pip.
@@ -64,7 +64,7 @@ Running the gem5 executable directly is a bit complicated since there are some l
 Parameter | Values | Description | Requirements/Restrictions
 --- | --- | --- | ---
 `--executable` | Filesystem Path | The executable you want to run with gem5 | Required
-`--enable-spt` | n/a | Enables SPT's protection mechanism (if this is left out then then you have the `UnsafeBaseline` | Not required
+`--enable-spt` | n/a | Enables SPT's protection mechanism (if this is left out then then you have the `UnsafeBaseline`) | Not required
 `--threat-model` | `spectre`, `futuristic` | Which threat model to simulate under (see paper for details) | Required if `--enable-spt` is specified
 `--untaint-method` | `none`, `fwd`, `bwd`, `ideal` | What type of untaint propagation to allow (see paper for details) | Required if `--enable-spt` is specified
 `--enable-shadow-l1` | n/a | Enables the shadow L1 (aka taint tracking through the L1 cache) | Cannot be specified if `--enable-shadow-mem` was specified
@@ -75,7 +75,7 @@ Parameter | Values | Description | Requirements/Restrictions
 Parameter | Values | Description | Requirements/Restrictions
 --- | --- | --- | --- |
 `--track-insts` | n/a | If this is specified, then gem5 will output detailed taint tracking information. This is recommended if you wish to observe the flow of taint/untaint through your program. Note that a _lot_ of output will be produced! | Can only be specified if `--enable-spt` is specified
-`--output-dir` | Filesystem Path | This is the directory where the output `stats.txt` file will be generated. Note that whatever directory you specify here will be created. If unspecified, then it will create a directory `m5out` in `$SPT` and put `stats.txt` there. |
+`--output-dir` | Filesystem Path | This is the directory where the output `stats.txt` file will be generated. Note that whatever directory you specify here will be created. If unspecified, then it will create a directory `m5out` in `$SPT` and put `stats.txt` there. | Not required
 
 
 ### Running Configurations from the Paper
@@ -107,22 +107,22 @@ On top of the statistics provided by gem5, we provide some custom statistics as 
 
 Statistic | Description
 --- | ---
-TotalUntaints          | Every time a reg goes from tainted to untainted
-VPUntaints             | Secret-dependent operand reg untainted b/c a transmit reached the VP
-FwdUntaints            | Reg untainted b/c of fwd untaint propagation
-BwdUntaints            | Reg untainted b/c of bwd untaint propagation
-SL1Untaints            | Load dest reg untainted b/c of the shadow L1
-DelayedSL1Untaints     | Load dest reg untainted b/c of the shadow L1 (but had to wait until STLPublic)
-STLFwdUntaints         | Load dest reg untainted b/c of STL fwding
-STLBwdUntaints         | Store src reg untainted b/c of STL fwding
-DelayedSTLFwdUntaints  | Load dest reg untainted b/c of STL fwding (but had to wait until STLPublic)
-DelayedSTLBwdUntaints  | Store src reg untainted b/c of STL fwding (but had to wait until STLPublic)
+TotalUntaints          | Every time a register goes from tainted to untainted
+VPUntaints             | Secret-dependent operand register untainted because a transmit reached the visibility point
+FwdUntaints            | register untainted because of forward untaint propagation
+BwdUntaints            | register untainted because of backward untaint propagation
+SL1Untaints            | Load destination register untainted because of the shadow L1
+DelayedSL1Untaints     | Load destination register untainted because of the shadow L1 (but had to wait until `STLPublic` was true)
+STLFwdUntaints         | Load destination register untainted because of store-to-load forwarding
+STLBwdUntaints         | Store source register untainted because of store-to-load forwarding
+DelayedSTLFwdUntaints  | Load destination register untainted because of store-to-load forwarding (but had to wait until `STLPublic` was true)
+DelayedSTLBwdUntaints  | Store source register untainted because of store-to-load forwarding (but had to wait until `STLPublic` was true)
 SL1UntaintedHit        | A hit in the shadow L1 that returns untainted data
 SL1TaintedHit          | A hit in the shadow L1 that returns tainted data
-DelayedSL1UntaintedHit | A hit in the shadow L1 that returns untainted data (but had to wait until STLPublic)
-DelayedSL1TaintedHit   | A hit in the shadow L1 that returns tainted data (but had to wait until STLPublic)
+DelayedSL1UntaintedHit | A hit in the shadow L1 that returns untainted data (but had to wait until `STLPublic` was true)
+DelayedSL1TaintedHit   | A hit in the shadow L1 that returns tainted data (but had to wait until `STLPublic` was true)
 SL1Miss                | A miss in the shadow L1 (which always returns tainted data)
-DelayedSL1Miss         | A miss in the shadow L1 (which always returns tainted data, had to wait until STLPublic)
+DelayedSL1Miss         | A miss in the shadow L1 (which always returns tainted data, had to wait until `STLPublic` was true)
 
 For more details/explanation on these events, see our paper.
 
