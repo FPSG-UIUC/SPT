@@ -55,7 +55,7 @@ scons build/X86_MESI_Two_Level/gem5.fast -j <num cores>
 
 Running the gem5 executable directly is a bit complicated since there are some legacy command-line options from previous projects. Thus it is **highly** recommended that you use the helper script `run_spt.py`. **You need to run it with Python version 3.5 or later!**
 
-** Note:** If you want to see the actual command that is run, gem5 prints it near the start.
+**Note:** If you want to see the actual command that is run, gem5 prints it near the start.
 
 **Note:** Our helper script targets syscall emulation mode for gem5. For full system mode, you're on your own unfortunately.
 
