@@ -4,6 +4,8 @@
 
 <sup>&#10038;</sup> UIUC, USA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<sup>†</sup> Tel Aviv University, Israel
 
+[![DOI](https://zenodo.org/badge/405761413.svg)](https://zenodo.org/badge/latestdoi/405761413)
+
 ## Intro
 
 This is the code we used to do the evaluations for our MICRO 2021 paper: _Speculative Privacy Tracking (SPT): Leaking Information From Speculative Execution Without Compromising Privacy_.
