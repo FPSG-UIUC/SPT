@@ -109,8 +109,8 @@ Statistic | Description
 --- | ---
 TotalUntaints          | Every time a register goes from tainted to untainted
 VPUntaints             | Secret-dependent operand register untainted because a transmit reached the visibility point
-FwdUntaints            | register untainted because of forward untaint propagation
-BwdUntaints            | register untainted because of backward untaint propagation
+FwdUntaints            | Register untainted because of forward untaint propagation
+BwdUntaints            | Register untainted because of backward untaint propagation
 SL1Untaints            | Load destination register untainted because of the shadow L1
 DelayedSL1Untaints     | Load destination register untainted because of the shadow L1 (but had to wait until `STLPublic` was true)
 STLFwdUntaints         | Load destination register untainted because of store-to-load forwarding
