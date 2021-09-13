@@ -37,7 +37,7 @@ Tool | Version | Notes
 --- | --- | ---
 Ubuntu | 16.04 | :warning: Unfortunately the repo doesn't appear to run correctly when tested on Ubuntu 20.04 (we haven't tested Ubuntu 18). If you run into a similar issue, we suggest using a docker container that has the correct version of Ubuntu.
 Python | 2.7 | This is needed to build the repo. You won't invoke this manually.
-Python | 3.5+ | You will manually invoke this to run the helper script. It is assumed that `python3` is the command used to specifically run Python 3.
+Python | 3.5+ | You will manually invoke this to run the helper script.
 SCons | 2.5.1 | :warning: SCons versions 3 and beyond will use Python 3 under the hood and will cause build failures, so **make sure you use this version!** It can't be found with Anaconda, but it _can_ be found with pip.
 g++ | 5.3.1 | This version is default installed when `apt install g++` is run on Ubuntu 16.04
 
@@ -53,7 +53,9 @@ scons build/X86_MESI_Two_Level/gem5.fast -j <num cores>
 
 ## Running
 
-Running the gem5 executable directly is a bit complicated since there are some legacy command-line options from previous projects. Thus it is **highly** recommended that you use the helper script `run_spt.py`. If you want to see the actual command that is run, gem5 prints it near the start.
+Running the gem5 executable directly is a bit complicated since there are some legacy command-line options from previous projects. Thus it is **highly** recommended that you use the helper script `run_spt.py`. **You need to run it with Python version 3.5 or later!**
+
+** Note:** If you want to see the actual command that is run, gem5 prints it near the start.
 
 **Note:** Our helper script targets syscall emulation mode for gem5. For full system mode, you're on your own unfortunately.
 
