@@ -1,0 +1,23 @@
+# YAML 1.2
+---
+authors:
+  -
+    family-names: Choudhary
+    given-names: Rutvik
+  -
+    family-names: Yu
+    given-names: Jiyong
+  -
+    family-names: Fletcher
+    given-names: "Christopher W."
+  -
+    family-names: Morrison
+    given-names: Adam
+cff-version: "1.1.0"
+date-released: 2021-09-12
+doi: "10.5281/zenodo.5502335"
+message: "If you use this software, please cite it using these metadata."
+repository-code: "https://github.com/FPSG-UIUC/SPT"
+title: "Evaluation Code for Speculative Privacy Tracking (SPT)"
+version: "1.0"
+...
