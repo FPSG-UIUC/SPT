@@ -467,7 +467,7 @@ class FullO3CPU : public BaseO3CPU
 
     void setCCReg(PhysRegIdPtr phys_reg, TheISA::CCReg val);
 
-    /** [Rutvik, STT+] Read/set taint bit of a given register */
+    /** [Rutvik, SPT] Read/set taint bit of a given register */
     bool readTaint(PhysRegIdPtr phys_reg);
     const BitVec* readTaintVec(PhysRegIdPtr phys_reg);
     bool readPartialTaint(PhysRegIdPtr phys_reg, uint8_t size, uint8_t offset = 0);
@@ -490,7 +490,7 @@ class FullO3CPU : public BaseO3CPU
         regFile.resetUntaintMethod(phys_reg);
     }
 
-    /** [Jiyong, STT+] Untaint when a transmitter passes VP */
+    /** [Jiyong, SPT] Untaint when a transmitter passes VP */
     void untaintMemOp(DynInstPtr inst);
 
     uint64_t readArchIntReg(int reg_idx, ThreadID tid);
@@ -835,7 +835,7 @@ class FullO3CPU : public BaseO3CPU
     /** Get the dcache port (used to find block size for translations). */
     MasterPort &getDataPort() override { return dcachePort; }
 
-    // [Rutvik, STT+] Extra stats we collect
+    // [Rutvik, SPT] Extra stats we collect
     Stats::Scalar TotalUntaints;           // Every time a reg goes from tainted to untainted
     Stats::Scalar VPUntaints;              // Secret-dependent operand reg untainted b/c a transmit reached the VP
     Stats::Scalar FwdUntaints;             // Reg untainted b/c of fwd untaint propagation
@@ -915,7 +915,7 @@ class FullO3CPU : public BaseO3CPU
     // whether consider more transmit instructions
     int moreTransmitInsts;
 
-    /** [Rutvik, STT+] Configs that help with STT+ experiements **/
+    /** [Rutvik, SPT] Configs that help with SPT experiements **/
 
     // whether to print delay cycle counts
     bool printDelayCycles;
@@ -981,7 +981,7 @@ class FullO3CPU : public BaseO3CPU
 
     bool isArchRegTracked(const RegId& archReg);
 
-    /** [Rutvik, STT+] Structure that shadows the L1 to implement pseudo-
+    /** [Rutvik, SPT] Structure that shadows the L1 to implement pseudo-
      ** taint tracking in memory. Key is address of a byte, bool indicates if
      ** the byte is tainted
      **/

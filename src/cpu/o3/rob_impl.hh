@@ -244,10 +244,10 @@ ROB<Impl>::insertInst(DynInstPtr &inst)
         inst->setDestTaint(false);
     }
 
-    // [Rutvik, STT+] Logging stuff
+    // [Rutvik, SPT] Logging stuff
     if (inst->isAccess() || inst->isArgsTainted()) {
         bool printTaintedSrcs = false;
-         // [Rutvik, STT+] Inst tracking stuff
+         // [Rutvik, SPT] Inst tracking stuff
         if (cpu->isInstTracked(inst)) {
             printf("[%06lx] %lx.%lx inserted into ROB and dest tainted due to %s\n",
                 (uint64_t)cpu->numCycles.value(), inst->instAddr(), inst->seqNum, reasonForTainting.c_str());
@@ -268,7 +268,7 @@ ROB<Impl>::insertInst(DynInstPtr &inst)
         }
 
         for (auto regPair : newlyTaintedDestRegPairs) {
-            // [Rutvik, STT+] Inst tracking stuff
+            // [Rutvik, SPT] Inst tracking stuff
             for (auto trackedInst : cpu->trackedInstsForReg(regPair.second)) {
                 if (trackedInst == inst) continue;
                 string regType = trackedInst->containsSrcPhysReg(regPair.second) ? "src" : "dest";
@@ -280,7 +280,7 @@ ROB<Impl>::insertInst(DynInstPtr &inst)
                 printTaintedSrcs = true;
             }
 
-            // [Rutvik, STT+] Reg tracking stuff
+            // [Rutvik, SPT] Reg tracking stuff
             if (cpu->isArchRegTracked(regPair.first) && !cpu->isInstTracked(inst)) {
                 printf("[%06lx] tainting reg %d->%d(%s) via inserting %lx.%lx into ROB "
                        "due to %s\n",
@@ -291,7 +291,7 @@ ROB<Impl>::insertInst(DynInstPtr &inst)
         }
     }
     else {
-        // [Rutvik, STT+] Inst tracking stuff
+        // [Rutvik, SPT] Inst tracking stuff
         if (cpu->isInstTracked(inst)) {
             printf("[%06lx] %lx.%lx inserted into ROB but destination not tainted\n",
                 (uint64_t)cpu->numCycles.value(), inst->instAddr(), inst->seqNum);
@@ -547,7 +547,7 @@ ROB<Impl>::updateVisibleState()
                 prevInstsComplete = false;
             }
 
-            // [Jiyong, Rutvik, STT+] Checking whether instructions have reached the VP
+            // [Jiyong, Rutvik, SPT] Checking whether instructions have reached the VP
             if (cpu->applyDDIFT) {
                 bool unsquashableBefore = inst->isUnsquashable();
                 bool unsquashableNow = (!cpu->isFuturistic && inst->isPrevBrsResolved()) ||
@@ -740,7 +740,7 @@ ROB<Impl>::findInst(ThreadID tid, InstSeqNum squash_inst)
     return NULL;
 }
 
-// [Rutvik, STT+] Propagate untaint forwards and backwards
+// [Rutvik, SPT] Propagate untaint forwards and backwards
 template <class Impl>
 bool
 ROB<Impl>::propagateUntaint(ThreadID tid)
@@ -798,7 +798,7 @@ ROB<Impl>::propagateUntaint(ThreadID tid)
                         }
                     }
 
-                    // [Rutvik, STT+] Inst tracking stuff
+                    // [Rutvik, SPT] Inst tracking stuff
                     if (instTracked) {
                         printf("[%06lx] %lx.%lx dest regs marked for untainting via forward propagation\n",
                             (uint64_t)cpu->numCycles.value(), inst->instAddr(), inst->seqNum);
@@ -812,19 +812,19 @@ ROB<Impl>::propagateUntaint(ThreadID tid)
                         printf("\n");
                     }
 
-                    // [Rutvik, STT+] Logging stuff
+                    // [Rutvik, SPT] Logging stuff
                     for (int i = 0; i < inst->numDestRegs(); i++) {
                         if (!inst->isDestIdxTainted(i) || destTaintBcastMask.at(i)) continue;
                         auto archReg = inst->destRegIdx(i);
                         auto physReg = inst->renamedDestRegIdx(i);
-                        // [Rutvik, STT+] Reg tracking stuff
+                        // [Rutvik, SPT] Reg tracking stuff
                         if (cpu->isArchRegTracked(archReg) && !instTracked) {
                             printf("[%06lx] reg %d->%d(%s) marked for untainting via forward propagation on %lx.%lx\n",
                                     (uint64_t)cpu->numCycles.value(), archReg.index(), physReg->index(),
                                     archReg.className(), inst->instAddr(), inst->seqNum);
                         }
 
-                        // [Rutvik, STT+] Inst tracking stuff
+                        // [Rutvik, SPT] Inst tracking stuff
                         auto matchingInsts = cpu->trackedInstsForReg(physReg);
                         for (auto trackedInst : matchingInsts) {
                             if (trackedInst == inst) continue;
@@ -876,7 +876,7 @@ ROB<Impl>::propagateUntaint(ThreadID tid)
                 }
 
                 if (backwardsPassWorked) {
-                    // [Rutvik, STT+] Inst tracking stuff
+                    // [Rutvik, SPT] Inst tracking stuff
                     if (instTracked) {
                         printf("[%06lx] %lx.%lx src regs marked for untainting via backward propagation\n",
                             (uint64_t)cpu->numCycles.value(), inst->instAddr(), inst->seqNum);
@@ -889,18 +889,18 @@ ROB<Impl>::propagateUntaint(ThreadID tid)
                         printf("\n");
                     }
 
-                    // [Rutvik, STT+] Logging stuff
+                    // [Rutvik, SPT] Logging stuff
                     for (auto regPair : bwdUntaintedRegs) {
                         auto archReg = regPair.first;
                         auto physReg = regPair.second;
-                        // [Rutvik, STT+] Reg tracking stuff
+                        // [Rutvik, SPT] Reg tracking stuff
                         if (cpu->isArchRegTracked(archReg) && !instTracked) {
                             printf("[%06lx] reg %d->%d(%s) marked for untainting via backward propagation on %lx.%lx\n=",
                                     (uint64_t)cpu->numCycles.value(), archReg.index(), physReg->index(),
                                     archReg.className(), inst->instAddr(), inst->seqNum);
                         }
 
-                        // [Rutvik, STT+] Inst tracking stuff
+                        // [Rutvik, SPT] Inst tracking stuff
                         auto matchingInsts = cpu->trackedInstsForReg(physReg);
                         for (auto trackedInst : matchingInsts) {
                             if (trackedInst == inst) continue;
@@ -949,7 +949,7 @@ ROB<Impl>::propagateUntaint(ThreadID tid)
             auto utMethod = std::get<4>(t);
 
             if (cpu->readPartialTaint(physReg, size, offset)) {
-                // [Rutvik, STT+] Stat collection stuff
+                // [Rutvik, SPT] Stat collection stuff
 
                 cpu->setUntaintMethod(physReg, utMethod);
 
@@ -961,7 +961,7 @@ ROB<Impl>::propagateUntaint(ThreadID tid)
                     cpu->BwdUntaints++;
                 }
 
-                // [Rutvik, STT+] Inst tracking stuff
+                // [Rutvik, SPT] Inst tracking stuff
 
                 if (cpu->isInstTracked(inst)) {
                     printf("[%06lx] untainting reg %d(%s) of %lx.%lx from untaint queue\n", (uint64_t)cpu->numCycles.value(),
@@ -1001,7 +1001,7 @@ ROB<Impl>::printForThread(ThreadID tid, bool printData, bool printOnlyTrackedIns
     for (auto instIt = instList[tid].begin(); instIt != instList[tid].end(); instIt++) {
         auto inst = (*instIt);
 
-        // [Rutvik, STT+] Inst tracking stuff
+        // [Rutvik, SPT] Inst tracking stuff
         if (printOnlyTrackedInsts && !cpu->isInstTracked(inst)) {
             continue;
         }
@@ -1063,7 +1063,7 @@ ROB<Impl>::getResolvedPendingSquashInst(ThreadID tid)
     for (auto instIt = instList[tid].begin(); instIt != instList[tid].end(); instIt++) {
         auto inst = (*instIt);
         if (inst->hasPendingSquash()
-            && inst->isUnsquashable()   // STT+: a delayed branch wait until it reaches VP
+            && inst->isUnsquashable()   // SPT: a delayed branch wait until it reaches VP
             && !inst->isSquashed()  // if it's already squashed, we ignore it
             ) {
             return inst;

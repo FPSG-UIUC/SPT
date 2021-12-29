@@ -1267,7 +1267,7 @@ DefaultIEW<Impl>::executeInsts()
                     inst->delayedAtCycle = cpu->numCycles.value();
                     instQueue.deferMemInst(inst); // TAINT LIFECYCLE: inst has been delayed
 
-                    // [Rutvik, STT+] Inst tracking stuff
+                    // [Rutvik, SPT] Inst tracking stuff
                     if (cpu->isInstTracked(inst)) {
                         printf("[%06lx] load %lx.%lx was sent to deferred mem instr queue\n",
                             (uint64_t)cpu->numCycles.value(), inst->instAddr(), inst->seqNum);
@@ -1310,7 +1310,7 @@ DefaultIEW<Impl>::executeInsts()
                     inst->delayedAtCycle = cpu->numCycles.value();
                     instQueue.deferMemInst(inst); // TAINT LIFECYCLE: inst has been delayed
 
-                    // [Rutvik, STT+] Inst tracking stuff
+                    // [Rutvik, SPT] Inst tracking stuff
                     if (cpu->isInstTracked(inst)) {
                         printf("[%06lx] store %lx.%lx was sent to deferred mem instr queue\n",
                             (uint64_t)cpu->numCycles.value(), inst->instAddr(), inst->seqNum);

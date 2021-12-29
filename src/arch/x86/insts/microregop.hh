@@ -75,7 +75,7 @@ namespace X86ISA
                 uint64_t _dest, uint64_t _src1, uint64_t _src2,
                 bool subtract = false) const;
 
-        // Rutvik, STT+
+        // Rutvik, SPT
         virtual uint8_t getDataSize() const { return dataSize; }
     };
 

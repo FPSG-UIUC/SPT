@@ -73,7 +73,7 @@ def template MicroLimmOpDeclare {{
 
         Fault execute(ExecContext *, Trace::InstRecord *) const;
 
-        // Rutvik, STT+
+        // Rutvik, SPT
         virtual uint8_t getDataSize() const { return dataSize; }
     };
 }};

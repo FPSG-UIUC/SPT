@@ -168,10 +168,10 @@ class LSQUnit {
     /** [mengjia] Validate loads. */
     int exposeLoads();
 
-    /** [Jiyong, Rutvik, STT+] Updates the fenceDelay status of all loads. */
+    /** [Jiyong, Rutvik, SPT] Updates the fenceDelay status of all loads. */
     void updateFenceDelays();
 
-    /** [Rutvik, STT+] Propagates untaints through the LSQ. */
+    /** [Rutvik, SPT] Propagates untaints through the LSQ. */
     void propagateUntaint();
 
     /** [mengjia] Update Visbible State.
@@ -896,7 +896,7 @@ LSQUnit<Impl>::read(Request *req, Request *sreqLow, Request *sreqHigh,
                 bool loadDestNewTaint = load_inst->isDestIdxTainted(0);
                 bool storeSrcNewTaint = forwardingStore->isArgsIdxTainted(2);
 
-                // [Rutvik, STT+] Stat collection stuff
+                // [Rutvik, SPT] Stat collection stuff
                 if (loadDestOldTaint && !loadDestNewTaint) {
                     cpu->TotalUntaints++;
                     cpu->STLFwdUntaints++;

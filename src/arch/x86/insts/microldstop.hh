@@ -87,7 +87,7 @@ namespace X86ISA
                 (addressSize == 1 && !_machInst.rex.present) ? 1 << 6 : 0;
         }
 
-        // Rutvik, STT+
+        // Rutvik, SPT
         virtual uint8_t getDataSize() const { return dataSize; }
         virtual uint8_t getAddrSize() const { return addressSize; }
     };

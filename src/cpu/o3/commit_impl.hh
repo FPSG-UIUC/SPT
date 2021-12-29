@@ -918,7 +918,7 @@ DefaultCommit<Impl>::commit()
                     handleSquashSignalFromIEW(tid);
                 }
                 else if (cpu->configImpFlow == 1) {  // Eager scheme
-                    printf("Eager scheme is disabled in STT+\n");
+                    printf("Eager scheme is disabled in SPT\n");
                     assert(0);
                     if (fromIEW->mispredictInst[tid]) { // a branch
                         // for branch squash, we can handle now, since we are tracking implicit flow
@@ -1222,7 +1222,7 @@ DefaultCommit<Impl>::commitInsts()
             DPRINTF(Commit, "Retiring squashed instruction from "
                     "ROB.\n");
 
-            // [Rutvik, STT+] Inst tracking stuff
+            // [Rutvik, SPT] Inst tracking stuff
             if (cpu->isInstTracked(head_inst)) {
                 printf("[%06lx] %lx.%lx was squashed and is now retired (i.e. removed from ROB)\n",
                     (uint64_t)cpu->numCycles.value(), head_inst->instAddr(), head_inst->seqNum);
@@ -1262,7 +1262,7 @@ DefaultCommit<Impl>::commitInsts()
 
 
             if (commit_success) {
-                // [Rutvik, STT+] Inst tracking stuff
+                // [Rutvik, SPT] Inst tracking stuff
                 if (cpu->isInstTracked(head_inst)) {
                     printf("[%06lx] %lx.%lx was committed\n",
                         (uint64_t)cpu->numCycles.value(), head_inst->instAddr(), head_inst->seqNum);
@@ -1362,7 +1362,7 @@ DefaultCommit<Impl>::commitInsts()
                         "[tid:%i] [sn:%i].\n",
                         head_inst->pcState(), tid ,head_inst->seqNum);
 
-                // [Rutvik, STT+] Inst tracking stuff
+                // [Rutvik, SPT] Inst tracking stuff
                 if (cpu->isInstTracked(head_inst)) {
                     printf("[%06lx] %lx.%lx was unable to be committed\n",
                         (uint64_t)cpu->numCycles.value(), head_inst->instAddr(), head_inst->seqNum);
@@ -1522,7 +1522,7 @@ DefaultCommit<Impl>::commitHead(DynInstPtr &head_inst, unsigned inst_num)
     DPRINTF(Commit, "Committing instruction with [sn:%lli] PC %s\n",
             head_inst->seqNum, head_inst->pcState());
 
-    // Jiyong, Rutvik, STT+
+    // Jiyong, Rutvik, SPT
     // Delay counting
     if (head_inst->isLoad() || head_inst->isStore()) {
         if (head_inst->delayedCycleCnt > 0) {
@@ -1546,7 +1546,7 @@ DefaultCommit<Impl>::commitHead(DynInstPtr &head_inst, unsigned inst_num)
         else
             delay_cycle_count[head_inst->instAddr()] += head_inst->delayedCycleCnt;
 
-        // Rutvik, STT+
+        // Rutvik, SPT
         if (cpu->printDelayCycles) {
             int64_t num_cycle = cpu->numCycles.value();
             int print_cycle_cnt_new = num_cycle / 100000;
@@ -1585,7 +1585,7 @@ DefaultCommit<Impl>::commitHead(DynInstPtr &head_inst, unsigned inst_num)
                         head_inst->seqNum, head_inst->pcState());
     }
 
-    // [Rutvik, STT+] When a store is committed, we need to save the taint status of the source data
+    // [Rutvik, SPT] When a store is committed, we need to save the taint status of the source data
     // so that we can access it later for the shadow L1
     if (head_inst->isStore()) {
         auto& sqEntryTaintVec = head_inst->getSQEntry()->dataTaintVec;
@@ -1629,7 +1629,7 @@ DefaultCommit<Impl>::getInsts()
     // Read any renamed instructions and place them into the ROB.
     int insts_to_process = std::min((int)renameWidth, fromRename->size);
 
-    // [Rutvik, STT+] Inst tracking stuff
+    // [Rutvik, SPT] Inst tracking stuff
     bool trackedInstInserted = false;
     ThreadID targetTid;
 
@@ -1649,7 +1649,7 @@ DefaultCommit<Impl>::getInsts()
 
             rob->insertInst(inst);
 
-            // [Rutvik, STT+] Inst tracking stuff
+            // [Rutvik, SPT] Inst tracking stuff
             if (cpu->isInstTracked(inst)) {
                 trackedInstInserted = true;
                 targetTid = tid;
@@ -1665,7 +1665,7 @@ DefaultCommit<Impl>::getInsts()
         }
     }
 
-    // [Rutvik, STT+] Inst tracking stuff
+    // [Rutvik, SPT] Inst tracking stuff
     if (trackedInstInserted && cpu->ifPrintROB) {
         printf("ROB AFTER INSERTING INSTS:\n");
         rob->printForThread(targetTid, false, true);

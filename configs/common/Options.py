@@ -316,9 +316,9 @@ def addCommonOptions(parser):
             help="implicit flow handling mechanism")
     parser.add_option("--moreTransmitInsts", default=None, action="store", type="int",
             help="Include more transmit instruction types.")
-    # [Rutvik, STT+] add options for STT+ experiments
+    # [Rutvik, SPT] add options for SPT experiments
     parser.add_option("--ignoreLoadsFile", default=None, action="store",
-            help="A path to a file that contains the address of loads the STT+ mechanism"\
+            help="A path to a file that contains the address of loads the SPT mechanism"\
             "should ignore")
     parser.add_option("--trackInstsFile", default=None, action="store",
             help="A path to a file that contains the address of instructions whose lifecycles"\

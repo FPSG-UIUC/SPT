@@ -496,7 +496,7 @@ FullO3CPU<Impl>::FullO3CPU(DerivO3CPUParams *params)
     if (moreTransmitInsts != 0)
         assert(applyDDIFT && !loadInExec);
 
-    // [Rutvik, STT+] Setting up some parameters
+    // [Rutvik, SPT] Setting up some parameters
     disableUntaint = params->disableUntaint;
     fwdUntaint = params->fwdUntaint && !disableUntaint;
     bwdUntaint = params->bwdUntaint && params->fwdUntaint && !disableUntaint;
@@ -520,7 +520,7 @@ FullO3CPU<Impl>::FullO3CPU(DerivO3CPUParams *params)
     std::cout << "Using untaint tier " << untaintTier << std::endl;
     std::cout << "Free Param = " << freeParam << std::endl;
 
-    // [Rutvik, STT+] Load the data from the ignoreLoads file
+    // [Rutvik, SPT] Load the data from the ignoreLoads file
     std::ifstream ignoreLoadsFile(params->ignoreLoadsFilePath, std::ios_base::in);
     if (ignoreLoadsFile.is_open()) {
         std::cout << "Reading file " << params->ignoreLoadsFilePath << " for loads to ignore..." << std::endl;
@@ -536,7 +536,7 @@ FullO3CPU<Impl>::FullO3CPU(DerivO3CPUParams *params)
         std::cout << "===" << std::endl;
     }
 
-    // [Rutvik, STT+] Load the data from the trackInsts file
+    // [Rutvik, SPT] Load the data from the trackInsts file
     trackAllInsts = params->trackInstsFilePath == "all";
     trackInsts = trackAllInsts;
     std::ifstream trackInstsFile(params->trackInstsFilePath, std::ios_base::in);
@@ -565,7 +565,7 @@ FullO3CPU<Impl>::FullO3CPU(DerivO3CPUParams *params)
     }
     std::cout << "===" << std::endl;
 
-    // [Rutvik, STT+] Load the data from the trackRegs file
+    // [Rutvik, SPT] Load the data from the trackRegs file
     std::ifstream trackRegsFile(params->trackRegsFilePath, std::ios_base::in);
     if (trackRegsFile.is_open()) {
         std::cout << "Reading file " << params->trackRegsFilePath << " for int arch regs to track..." << std::endl;
@@ -628,7 +628,7 @@ FullO3CPU<Impl>::regStats()
               "for an interrupt")
         .prereq(quiesceCycles);
 
-    // [Rutvik, STT+] Extra stats we collect
+    // [Rutvik, SPT] Extra stats we collect
     TotalUntaints
         .name(name() + ".TotalUntaints")
         .desc("Total number of times a register went from tainted to untainted")
@@ -2080,7 +2080,7 @@ FullO3CPU<Impl>::updateThreadPriority()
     }
 }
 
-/** [Rutvik, STT+] Read taint bit of a given register */
+/** [Rutvik, SPT] Read taint bit of a given register */
 template <class Impl>
 bool
 FullO3CPU<Impl>::readTaint(PhysRegIdPtr phys_reg) {
@@ -2089,14 +2089,14 @@ FullO3CPU<Impl>::readTaint(PhysRegIdPtr phys_reg) {
     return std::any_of(bitVec->begin(), bitVec->end(), [](bool b){ return b; });
 }
 
-/** [Rutvik, STT+] Read taint vec of a given register */
+/** [Rutvik, SPT] Read taint vec of a given register */
 template <class Impl>
 const typename PhysRegFile::BitVec*
 FullO3CPU<Impl>::readTaintVec(PhysRegIdPtr phys_reg) {
     return regFile.readTaint(phys_reg);
 }
 
-/** [Rutvik, STT+] Read taint bit of part of a given register */
+/** [Rutvik, SPT] Read taint bit of part of a given register */
 template <class Impl>
 bool
 FullO3CPU<Impl>::readPartialTaint(PhysRegIdPtr phys_reg, uint8_t size, uint8_t offset) {
@@ -2106,28 +2106,28 @@ FullO3CPU<Impl>::readPartialTaint(PhysRegIdPtr phys_reg, uint8_t size, uint8_t o
     return std::any_of(bitVec->begin() + offset, bitVec->begin() + offset + size, [](bool b){ return b; });
 }
 
-/** [Rutvik, STT+] Set taint bit of given register */
+/** [Rutvik, SPT] Set taint bit of given register */
 template <class Impl>
 void
 FullO3CPU<Impl>::setTaint(PhysRegIdPtr phys_reg, bool taint) {
     regFile.setTaint(phys_reg, taint);
 }
 
-/** [Rutvik, STT+] Set taint bit of part of a given register given another a taint status */
+/** [Rutvik, SPT] Set taint bit of part of a given register given another a taint status */
 template <class Impl>
 void
 FullO3CPU<Impl>::setPartialTaint(PhysRegIdPtr phys_reg, bool taint, uint8_t size, uint8_t offset) {
     regFile.setPartialTaint(phys_reg, taint, size, offset);
 }
 
-/** [Rutvik, STT+] Set taint bit of part of a given register given another taint vec */
+/** [Rutvik, SPT] Set taint bit of part of a given register given another taint vec */
 template <class Impl>
 void
 FullO3CPU<Impl>::setPartialTaintVec(PhysRegIdPtr phys_reg, const BitVec& taintVec, uint8_t size, uint8_t offset) {
     regFile.setPartialTaintVec(phys_reg, taintVec, size, offset);
 }
 
-/** Jiyong, STT+ untaint when a transmitter passes VP */
+/** Jiyong, SPT untaint when a transmitter passes VP */
 template <class Impl>
 void
 FullO3CPU<Impl>::untaintMemOp(DynInstPtr inst) {
@@ -2144,7 +2144,7 @@ FullO3CPU<Impl>::untaintMemOp(DynInstPtr inst) {
 
     const char* memOpType = inst->isLoad() ? "load" : "store";
 
-    // [Rutvik, STT+] Inst tracking stuff
+    // [Rutvik, SPT] Inst tracking stuff
     if (isInstTracked(inst)) {
         printf("[%06lx] %s %lx.%lx is being untainted\n",
             (uint64_t)numCycles.value(), memOpType, inst->instAddr(), inst->seqNum);
@@ -2160,19 +2160,19 @@ FullO3CPU<Impl>::untaintMemOp(DynInstPtr inst) {
     }
 
     // TODO: short circuit this if
-    // [Rutvik, STT+] Logging stuff
+    // [Rutvik, SPT] Logging stuff
     for (auto regPair : taintedSrcRegPairs) {
         auto archReg = regPair.first;
         auto physReg = regPair.second;
 
-        // [Rutvik, STT+] Reg tracking stuff
+        // [Rutvik, SPT] Reg tracking stuff
         if (isArchRegTracked(archReg) && !isInstTracked(inst)) {
             printf("[%06lx] untainting src reg %d->%d(%s) via %s %lx.%lx because it reached VP\n",
                     (uint64_t)numCycles.value(), archReg.index(), physReg->index(),
                     archReg.className(), memOpType, inst->instAddr(), inst->seqNum);
         }
 
-        // [Rutvik, STT+] Inst tracking stuff
+        // [Rutvik, SPT] Inst tracking stuff
         auto matchingInsts = trackedInstsForReg(physReg);
         for (auto trackedInst : matchingInsts) {
             if (trackedInst == inst) continue;
@@ -2193,7 +2193,7 @@ FullO3CPU<Impl>::untaintMemOp(DynInstPtr inst) {
         rob.printForThread(inst->threadNumber, false, true);
     }
 
-    // [Rutvik, STT+] Stat collection stuff
+    // [Rutvik, SPT] Stat collection stuff
     TotalUntaints += inst->numTaintedAddrRegs();
     VPUntaints += inst->numTaintedAddrRegs();
 

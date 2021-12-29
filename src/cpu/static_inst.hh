@@ -319,7 +319,7 @@ class StaticInst : public RefCounted, public StaticInstFlags
     /// Return name of machine instruction
     std::string getName() { return mnemonic; }
 
-    // Rutvik, STT+
+    // Rutvik, SPT
     virtual uint8_t getDataSize() const { return 0; }
     virtual uint8_t getAddrSize() const { return 0; }
 };

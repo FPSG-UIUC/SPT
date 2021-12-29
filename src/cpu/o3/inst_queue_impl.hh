@@ -922,7 +922,7 @@ InstructionQueue<Impl>::scheduleReadyInsts()
             issuing_inst->setIssued();
             ++total_issued;
 
-            // [Rutvik, STT+] Inst tracking stuff
+            // [Rutvik, SPT] Inst tracking stuff
             if (cpu->isInstTracked(issuing_inst)) {
                 printf("[%06lx] %lx.%lx issued",
                        (uint64_t)cpu->numCycles.value(), issuing_inst->instAddr(), issuing_inst->seqNum);
@@ -1256,7 +1256,7 @@ InstructionQueue<Impl>::getDeferredMemInstToExecute()
             mem_inst->onlyWaitForFence(false);
             mem_inst->onlyWaitForExpose(false);
 
-            // [Rutvik, STT+] Inst tracking stuff
+            // [Rutvik, SPT] Inst tracking stuff
             if (cpu->isInstTracked(mem_inst)) {
                 const char* type = mem_inst->isLoad() ? "Load" : "Store";
                 printf("[%06lx] %s %lx.%lx was removed from deferred mem instr queue and scheduled to be executed\n",

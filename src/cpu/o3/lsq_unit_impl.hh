@@ -136,7 +136,7 @@ LSQUnit<Impl>::completeDataAccess(PacketPtr pkt)
         setSpecBuffState(pkt->req);
     }
 
-    // [Rutvik, STT+]
+    // [Rutvik, SPT]
     if (inst->isLoad()) {
         if (pkt->isL1Hit()) {
             inst->setL1Hit();
@@ -173,7 +173,7 @@ LSQUnit<Impl>::completeDataAccess(PacketPtr pkt)
             }
         }
 
-        // [Rutvik, STT+] Shadow L1: Handling loads
+        // [Rutvik, SPT] Shadow L1: Handling loads
         if (cpu->enableShadowL1 && inst->isLoad() && !inst->isDummyLoad) {
             if (isSTLPublic(inst)) {
                 auto loadAddr = pkt->getAddr();
@@ -231,7 +231,7 @@ LSQUnit<Impl>::completeDataAccess(PacketPtr pkt)
 
                 bool loadDestNewTaint = inst->isDestIdxTainted(0);
 
-                // [Rutvik, STT+] Stat collection stuff
+                // [Rutvik, SPT] Stat collection stuff
                 if (loadDestOldTaint && !loadDestNewTaint) {
                     cpu->TotalUntaints++;
                     cpu->SL1Untaints++;
@@ -247,7 +247,7 @@ LSQUnit<Impl>::completeDataAccess(PacketPtr pkt)
         }
 
         if (inst->isStore()) {
-            // [Rutvik, STT+] Shadow L1: Handling stores
+            // [Rutvik, SPT] Shadow L1: Handling stores
             if (cpu->enableShadowL1) {
                 const BitVec& taintVec = inst->getSQEntry()->dataTaintVec;
                 auto storeAddr = pkt->getAddr();
@@ -651,7 +651,7 @@ LSQUnit<Impl>::checkSnoop(PacketPtr pkt)
         cpu->thread[x]->noSquashFromTC = no_squash;
     }
 
-    // [Rutvik, STT+] Shadow L1: Handling evictions
+    // [Rutvik, SPT] Shadow L1: Handling evictions
     if (cpu->enableShadowL1 && !cpu->bottomlessShadowL1) {
         auto pktAddr = pkt->getAddr();
         auto pktSize = pkt->getSize();
@@ -1122,7 +1122,7 @@ LSQUnit<Impl>::writebackPendingStore()
 }
 
 // [SafeSpec] update FenceDelay State
-/*** [Jiyong, Rutvik, STT+] Update logic for STT+ ***/
+/*** [Jiyong, Rutvik, SPT] Update logic for SPT ***/
 template <class Impl>
 void
 LSQUnit<Impl>::updateFenceDelays()
@@ -1142,11 +1142,11 @@ LSQUnit<Impl>::updateFenceDelays()
         if (!cpu->loadInExec) {
             // fence (fenceDelay flag is effective)
             if (cpu->applyDDIFT) {
-                // [Jiyong, STT+] Stall transmitters with tainted arguments
+                // [Jiyong, SPT] Stall transmitters with tainted arguments
                 if (!inst->isUnsquashable()) {
-                    // [Rutvik, STT+] Don't delay loads we want to ignore
+                    // [Rutvik, SPT] Don't delay loads we want to ignore
                     if (cpu->ignoreLoads.find(inst->pcState().instAddr()) == cpu->ignoreLoads.end()) {
-                        // [Rutvik, STT+] Inst tracking stuff
+                        // [Rutvik, SPT] Inst tracking stuff
                         if (cpu->isInstTracked(inst)) {
                             if (!inst->fenceDelay() && inst->isArgsTainted()) {
                                 printf("[%06lx] load %lx.%lx marked as delayed due to tainted srcs\n",
@@ -1192,7 +1192,7 @@ LSQUnit<Impl>::updateFenceDelays()
                 else {
                     assert(inst->isUnsquashable());
                     if (inst->isArgsTainted()) {
-                        // [Rutvik, STT+] Inst tracking stuff
+                        // [Rutvik, SPT] Inst tracking stuff
                         if (cpu->isInstTracked(inst)) {
                             printf("[%06lx] load %lx.%lx has reached VP, srcs will be untainted\n",
                                     (uint64_t)cpu->numCycles.value(), inst->instAddr(), inst->seqNum);
@@ -1247,7 +1247,7 @@ LSQUnit<Impl>::updateFenceDelays()
 
         if (cpu->applyDDIFT) {
             if (!inst->isUnsquashable()) {
-                // [Rutvik, STT+] Inst tracking stuff
+                // [Rutvik, SPT] Inst tracking stuff
                 if (cpu->isInstTracked(inst)) {
                     if (!inst->fenceDelay() && inst->isArgsTainted()) {
                         printf("[%06lx] store %lx.%lx marked as delayed due to tainted srcs\n",
@@ -1263,7 +1263,7 @@ LSQUnit<Impl>::updateFenceDelays()
             }
             else {
                 if (inst->isArgsTainted()) {
-                    // [Rutvik, STT+] Inst tracking stuff
+                    // [Rutvik, SPT] Inst tracking stuff
                     if (cpu->isInstTracked(inst)) {
                         printf("[%06lx] store %lx.%lx has reached VP, srcs will be untainted\n",
                                 (uint64_t)cpu->numCycles.value(), inst->instAddr(), inst->seqNum);
@@ -1351,7 +1351,7 @@ LSQUnit<Impl>::propagateUntaint()
 
             bool loadDestNewTaint = loadInst->isDestIdxTainted(0);
 
-            // [Rutvik, STT+] Stat collection stuff
+            // [Rutvik, SPT] Stat collection stuff
             if (loadDestOldTaint && !loadDestNewTaint) {
                 cpu->TotalUntaints++;
                 cpu->DelayedSL1Untaints++;
@@ -1405,7 +1405,7 @@ LSQUnit<Impl>::propagateUntaint()
             bool loadDestNewTaint = loadInst->isDestIdxTainted(0);
             bool storeSrcNewTaint = storeInst->isArgsIdxTainted(2);
 
-            // [Rutvik, STT+] Stat collection stuff
+            // [Rutvik, SPT] Stat collection stuff
             if (loadDestOldTaint && !loadDestNewTaint) {
                 cpu->TotalUntaints++;
                 cpu->DelayedSTLFwdUntaints++;
@@ -2120,7 +2120,7 @@ LSQUnit<Impl>::writeback(DynInstPtr &inst, PacketPtr pkt)
             DPRINTF(LSQUnit, "Completing instruction [sn:%lli] access at addr %lx\n",
                     inst->seqNum, pkt->getAddr());
 
-            // Rutvik, STT+: writeback forwarded data
+            // Rutvik, SPT: writeback forwarded data
             if (inst->fwdFromTaintedSt) {
                 if (cpu->isInstTracked(inst)) {
                     printf("[%06lx] dummy load returned, completing store-fwd to load %lx.%lx\n",

@@ -93,7 +93,7 @@ class Sequencer : public RubyPort
     void readCallback(Addr address,
                       DataBlock& data,
                       const bool externalHit = false,
-                      const bool L1Hit = false, // Rutvik, STT+
+                      const bool L1Hit = false, // Rutvik, SPT
                       const MachineType mach = MachineType_NUM,
                       const Cycles initialRequestTime = Cycles(0),
                       const Cycles forwardRequestTime = Cycles(0),

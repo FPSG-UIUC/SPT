@@ -467,7 +467,7 @@ Sequencer::readCallback(Addr address, DataBlock& data,
 
     PacketPtr pkt = request->pkt;
 
-    // Rutvik, STT+
+    // Rutvik, SPT
     if (L1Hit) {
         pkt->setL1Hit();
     }

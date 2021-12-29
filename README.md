@@ -130,5 +130,5 @@ For more details/explanation on these events, see our paper.
 
 ## Browsing the Code
 
-If you want to look for our specific additions, a good string to search for is `Rutvik, STT+`. That should indicate where most of the changes are. There may be some others that can be seen, but these locations will serve as a good starting point.
+If you want to look for our specific additions, a good string to search for is `Rutvik, SPT`. That should indicate where most of the changes are. There may be some others that can be seen, but these locations will serve as a good starting point.
 

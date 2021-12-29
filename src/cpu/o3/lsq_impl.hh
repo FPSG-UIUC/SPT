@@ -279,7 +279,7 @@ LSQ<Impl>::executeLoad(DynInstPtr &inst)
 {
     ThreadID tid = inst->threadNumber;
 
-    // [Rutvik, STT+] Inst tracking stuff
+    // [Rutvik, SPT] Inst tracking stuff
     if (cpu->isInstTracked(inst)) {
         printf("[%06lx] load %lx.%lx is being executed\n",
             (uint64_t)cpu->numCycles.value(), inst->instAddr(), inst->seqNum);
@@ -294,7 +294,7 @@ LSQ<Impl>::executeStore(DynInstPtr &inst)
 {
     ThreadID tid = inst->threadNumber;
 
-    // [Rutvik, STT+] Inst tracking stuff
+    // [Rutvik, SPT] Inst tracking stuff
     if (cpu->isInstTracked(inst)) {
         printf("[%06lx] store %lx.%lx is being executed\n",
             (uint64_t)cpu->numCycles.value(), inst->instAddr(), inst->seqNum);

@@ -158,7 +158,7 @@ class DerivO3CPU(BaseCPU):
     smtROBThreshold = Param.Int(100, "SMT ROB Threshold Sharing Parameter")
     smtCommitPolicy = Param.String('RoundRobin', "SMT Commit Policy")
 
-    # Rutvik, STT+: Use TAGE Predictor
+    # Rutvik, SPT: Use TAGE Predictor
     branchPred = Param.BranchPredictor(LTAGE(numThreads = Parent.numThreads),
                                        "Branch Predictor")
     # branchPred = Param.BranchPredictor(TournamentBP(numThreads =
@@ -176,7 +176,7 @@ class DerivO3CPU(BaseCPU):
     configImpFlow = Param.String('Ignore', "How to handle implicit flow")
     moreTransmitInsts = Param.Int(0, "More transmit instruction types")
 
-    # [Rutvik, STT+] STT+ configurations
+    # [Rutvik, SPT] SPT configurations
     ignoreLoadsFilePath = Param.String('', 'File that contains list of loads that tainting mechanism should ignore')
     trackInstsFilePath = Param.String('', 'File that contains list of loads whose taint lifecycle we wish to observe')
     trackRegsFilePath = Param.String('', '')

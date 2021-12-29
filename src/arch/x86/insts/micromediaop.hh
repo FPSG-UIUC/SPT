@@ -130,7 +130,7 @@ namespace X86ISA
         std::string generateDisassembly(Addr pc,
             const SymbolTable *symtab) const;
 
-        // Rutvik, STT+
+        // Rutvik, SPT
         virtual uint8_t getDataSize() const { return dataSize; }
     };
 }

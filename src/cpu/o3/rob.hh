@@ -245,7 +245,7 @@ class ROB
     /** Registers statistics. */
     void regStats();
 
-    // [Rutvik, STT+] Propagate untaint forwards and backwards
+    // [Rutvik, SPT] Propagate untaint forwards and backwards
     bool propagateUntaint(ThreadID tid);
 
     // print ROB for specific thread (including DDIFT information)

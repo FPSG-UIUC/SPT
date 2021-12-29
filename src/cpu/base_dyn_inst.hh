@@ -143,7 +143,7 @@ class BaseDynInst : public ExecContext, public RefCounted
         PrevInstsCommitted,
         // indicate whether previous instructions committed
         PrevBrsCommitted,
-        // [Rutvik, STT+] Whether the mem access was an L1 hit
+        // [Rutvik, SPT] Whether the mem access was an L1 hit
         L1Hit,
         // [mengjia] indicate whether previous branches are committed
         L1SpecXHitHigh,
@@ -299,7 +299,7 @@ class BaseDynInst : public ExecContext, public RefCounted
         return &sqEntry;
     }
 
-    // [Rutvik, STT+] Store-to-load forwarding stuff
+    // [Rutvik, SPT] Store-to-load forwarding stuff
     bool fwdFromTaintedSt;
     uint8_t *stFwdData;
     int stFwdDataSize;
@@ -407,7 +407,7 @@ class BaseDynInst : public ExecContext, public RefCounted
     void specTLBMiss(bool f) { instFlags[SpecTLBMiss] = f; }
     /*[mengjia] added 2 new flags and corresponding functions*/
 
-    /*** [Jiyong, Rutvik, STT+] ***/
+    /*** [Jiyong, Rutvik, SPT] ***/
 
     bool isUnsquashable() const { return instFlags[IsUnsquashable]; }
     void isUnsquashable(bool f) { instFlags[IsUnsquashable] = f; }

@@ -969,7 +969,7 @@ machine(MachineType:L1Cache, "MESI Directory L1 Cache CMP")
     assert(is_valid(cache_entry));
     DPRINTF(RubySlicc, "%s\n", cache_entry.DataBlk);
     L1Dcache.setMRU(cache_entry);
-     // [Rutvik, STT+] Let CPU know we had an L1 hit
+     // [Rutvik, SPT] Let CPU know we had an L1 hit
     sequencer.readCallback(address, cache_entry.DataBlk, false, true);
   }
 

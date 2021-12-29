@@ -957,7 +957,7 @@ DefaultRename<Impl>::doSquash(const InstSeqNum &squashed_seq_num, ThreadID tid)
             // Put the renamed physical register back on the free list.
             freeList->addReg(hb_it->newPhysReg);
 
-            // [Rutvik, STT+] Logging stuff
+            // [Rutvik, SPT] Logging stuff
             if (cpu->printRegRenaming) {
                 printf("[%06lx] Freeing %d->%d(%s) due to squash\n", (uint64_t)cpu->numCycles.value(),
                        hb_it->archReg.index(), hb_it->newPhysReg->index(), hb_it->archReg.className());
@@ -1020,7 +1020,7 @@ DefaultRename<Impl>::removeFromHistory(InstSeqNum inst_seq_num, ThreadID tid)
         if (hb_it->newPhysReg != hb_it->prevPhysReg) {
             freeList->addReg(hb_it->prevPhysReg);
 
-            // [Rutvik, STT+] Logging stuff
+            // [Rutvik, SPT] Logging stuff
             if (cpu->printRegRenaming) {
                 printf("[%06lx] Freeing %d->%d(%s) due to commit\n", (uint64_t)cpu->numCycles.value(),
                        hb_it->archReg.index(), hb_it->newPhysReg->index(), hb_it->archReg.className());
@@ -1043,7 +1043,7 @@ DefaultRename<Impl>::renameSrcRegs(DynInstPtr &inst, ThreadID tid)
     RenameMap *map = renameMap[tid];
     unsigned num_src_regs = inst->numSrcRegs();
 
-    // [Rutvik, STT+] Logging stuff
+    // [Rutvik, SPT] Logging stuff
     if (cpu->printRegRenaming) {
         printf("[%06lx] Renaming arch src regs of %lx.%lx\n",
                (uint64_t)cpu->numCycles.value(), inst->instAddr(), inst->seqNum);
@@ -1080,7 +1080,7 @@ DefaultRename<Impl>::renameSrcRegs(DynInstPtr &inst, ThreadID tid)
                 renamed_reg->index(),
                 renamed_reg->className());
 
-        // [Rutvik, STT+] Logging stuff
+        // [Rutvik, SPT] Logging stuff
         if (cpu->printRegRenaming) {
             printf("             %d->%d(%s)\n",
                    src_reg.index(),
@@ -1117,7 +1117,7 @@ DefaultRename<Impl>::renameDestRegs(DynInstPtr &inst, ThreadID tid)
     RenameMap *map = renameMap[tid];
     unsigned num_dest_regs = inst->numDestRegs();
 
-    // [Rutvik, STT+] Logging stuff
+    // [Rutvik, SPT] Logging stuff
     if (cpu->printRegRenaming) {
         printf("[%06lx] Renaming arch dest regs of %lx.%lx\n",
                (uint64_t)cpu->numCycles.value(), inst->instAddr(), inst->seqNum);
@@ -1155,7 +1155,7 @@ DefaultRename<Impl>::renameDestRegs(DynInstPtr &inst, ThreadID tid)
                 historyBuffer[tid].size(),
                 (*historyBuffer[tid].begin()).instSeqNum);
 
-        // [Rutvik, STT+] Logging stuff
+        // [Rutvik, SPT] Logging stuff
         if (cpu->printRegRenaming) {
             printf("             %d->%d(%s)  =>  %d->%d(%s)\n",
                    dest_reg.index(),
@@ -1177,7 +1177,7 @@ DefaultRename<Impl>::renameDestRegs(DynInstPtr &inst, ThreadID tid)
 
         ++renameRenamedOperands;
 
-        // [Rutvik, STT+] When an inst is renamed, its dest regs start out with a clean slate
+        // [Rutvik, SPT] When an inst is renamed, its dest regs start out with a clean slate
         cpu->setTaint(rename_result.first, false);
     }
 }
