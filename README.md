@@ -93,9 +93,9 @@ Configuration from Paper | Parameters
 SecureBaseline | `--enable-spt --untaint-method=none`
 Fwd, NoShadowL1 | `--enable-spt --untaint-method=fwd`
 Bwd, NoShadowL1 | `--enable-spt --untaint-method=bwd`
-Bwd, ShadowL1 | `--enable-spt --untaint-method=bwd, --enable-shadow-l1`
-Bwd, ShadowMem | `--enable-spt --untaint-method=bwd, --enable-shadow-mem`
-Ideal, ShadowMem | `--enable-spt --untaint-method=ideal, --enable-shadow-mem`
+Bwd, ShadowL1 | `--enable-spt --untaint-method=bwd --enable-shadow-l1`
+Bwd, ShadowMem | `--enable-spt --untaint-method=bwd --enable-shadow-mem`
+Ideal, ShadowMem | `--enable-spt --untaint-method=ideal --enable-shadow-mem`
 
 To run the InsecureBaseline, provide _only_ the `--executable` parameter.
 
