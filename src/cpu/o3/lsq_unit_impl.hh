@@ -1142,7 +1142,7 @@ LSQUnit<Impl>::updateFenceDelays()
         if (!cpu->loadInExec) {
             // fence (fenceDelay flag is effective)
             if (cpu->applyDDIFT) {
-                // [Jiyong, SPT] Stall transmitters with tainted arguments
+                // [Jiyong, Rutvik, SPT] Stall transmitters with tainted arguments
                 if (!inst->isUnsquashable()) {
                     // [Rutvik, SPT] Don't delay loads we want to ignore
                     if (cpu->ignoreLoads.find(inst->pcState().instAddr()) == cpu->ignoreLoads.end()) {

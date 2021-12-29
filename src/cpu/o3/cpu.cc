@@ -2127,7 +2127,7 @@ FullO3CPU<Impl>::setPartialTaintVec(PhysRegIdPtr phys_reg, const BitVec& taintVe
     regFile.setPartialTaintVec(phys_reg, taintVec, size, offset);
 }
 
-/** Jiyong, SPT untaint when a transmitter passes VP */
+/** Jiyong, Rutvik, SPT untaint when a transmitter passes VP */
 template <class Impl>
 void
 FullO3CPU<Impl>::untaintMemOp(DynInstPtr inst) {

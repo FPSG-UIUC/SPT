@@ -499,7 +499,7 @@ class DefaultCommit
 
     int stalled_counter;
 
-    // Jiyong, SPT
+    // Jiyong, Rutvik, SPT
     std::map<uint64_t, uint64_t> delay_cycle_count;
     std::map<uint64_t, uint64_t> delayed_times_count;
     std::map<uint64_t, uint64_t> undelayed_times_count;
