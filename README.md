@@ -37,13 +37,23 @@ git clone https://github.com/FPSG-UIUC/SPT.git
 
 Tool | Version | Notes
 --- | --- | ---
-Ubuntu | 16.04 | :warning: Unfortunately the repo doesn't appear to run correctly when tested on Ubuntu 20.04 (we haven't tested Ubuntu 18). If you run into a similar issue, we suggest using a Docker container that has the correct version of Ubuntu.
+Ubuntu | 16.04 | :warning: Unfortunately the repo doesn't appear to run correctly when tested on Ubuntu 20.04 (and we haven't tested Ubuntu 18). **We suggest using Docker as described below.**
 Python | 2.7 | This is needed to build the repo. You won't invoke this manually.
 Python | 3.5+ | You will manually invoke this to run the helper script.
 SCons | 2.5.1 | :warning: SCons versions 3 and beyond will use Python 3 under the hood and will cause build failures, so **make sure you use this version!** It can't be found with Anaconda, but it _can_ be found with pip.
 g++ | 5.3.1 | This version is default installed when `apt install g++` is run on Ubuntu 16.04
 
 There might be one or two extra dependencies that aren't already on your machine, but the gem5 build scripts will let you know what is missing, and from there it's just a matter of `apt install`.
+
+### Using Docker
+
+In order to make the build process easier, [we have published a Docker image to DockerHub](https://hub.docker.com/r/rutvikc/spt) that you can run SPT in. The advantage of using Docker is that it has all the necessary dependencies to build and run SPT _including_ the correct OS!
+
+Within the container, this git repo has already been cloned and resides at `/home/SPT`. Note that the repo has the [v1.0 tag](https://github.com/FPSG-UIUC/SPT/releases/tag/v1.0) checkout out. If you want the latest version of SPT you will have to do `git pull` and then `git checkout master`.
+
+To get this image locally run `docker pull rutvikc/spt`. After it finishes, when you run `docker images` you should see an image called `rutvikc/spt`.
+
+This is not intended to be a Docker tutorial, so we will leave out any further details.
 
 ### Build Command
 
