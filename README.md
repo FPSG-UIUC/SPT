@@ -49,7 +49,7 @@ There might be one or two extra dependencies that aren't already on your machine
 
 In order to make the build process easier, [we have published a Docker image to DockerHub](https://hub.docker.com/r/rutvikc/spt) that you can run SPT in. The advantage of using Docker is that it has all the necessary dependencies to build and run SPT _including_ the correct OS!
 
-Within the container, this git repo has already been cloned and resides at `/home/SPT`. Note that the repo has the [v1.0 tag](https://github.com/FPSG-UIUC/SPT/releases/tag/v1.0) checkout out. If you want the latest version of SPT you will have to do `git pull` and then `git checkout master`.
+Within the container, this git repo has already been cloned and resides at `/home/SPT`. Note that the Docker image might not be the most up-to-date version of SPT, so it's a good idea to do a `git pull` after starting up a Docker container.
 
 To get this image locally run `docker pull rutvikc/spt`. After it finishes, when you run `docker images` you should see an image called `rutvikc/spt`.
 
