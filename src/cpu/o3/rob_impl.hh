@@ -797,7 +797,7 @@ ROB<Impl>::propagateUntaint(ThreadID tid)
             // Forward untaint propagation
 
             if (cpu->fwdUntaint) {
-                if (!inst->isTransmit() && !argsTainted && destTainted) {
+                if (!inst->isMemTransmit() && !argsTainted && destTainted) {
                     for (int i = 0; i < inst->numDestRegs(); i++) {
                         if (inst->isDestIdxTainted(i) && !destTaintBcastMask.at(i)) {
                             destTaintBcastMask.at(i) = true;
@@ -1016,7 +1016,7 @@ ROB<Impl>::printForThread(ThreadID tid, bool printData, bool printOnlyTrackedIns
                inst->toString(printData).c_str());
 
         printf("fenceDelay=%d, ", inst->fenceDelay());
-        printf("isTransmit=%d, ", inst->isTransmit());
+        printf("isMemTransmit=%d, ", inst->isMemTransmit());
         printf("isAccess=%d, ", inst->isAccess());
         printf("isMemRef=%d, ", inst->isMemRef());
         printf("argsTainted=%d, destTainted=%d, nonCCDestTainted=%d, ", inst->isArgsTainted(), inst->isDestTainted(),

@@ -1203,7 +1203,8 @@ LSQUnit<Impl>::updateFenceDelays()
                         }
 
                         if (!cpu->disableUntaint) {
-                            cpu->untaintMemOp(inst); // TAINT LIFECYCLE: load has reached VP and is thus untainted
+                            // TAINT LIFECYCLE: load has reached VP and is thus untainted
+                            cpu->untaintMemTransmit(inst);
                         }
                     }
 
@@ -1274,7 +1275,8 @@ LSQUnit<Impl>::updateFenceDelays()
                     }
 
                     if (!cpu->disableUntaint) {
-                        cpu->untaintMemOp(inst); // TAINT LIFECYCLE: store has reached VP and is thus untainted
+                        // TAINT LIFECYCLE: store has reached VP and is thus untainted
+                        cpu->untaintMemTransmit(inst);
                     }
                 }
 

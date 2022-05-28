@@ -728,7 +728,21 @@ class BaseDynInst : public ExecContext, public RefCounted
     // Instruction is an access instruction (root of taint)
     bool isAccess() const { return staticInst->isLoad(); }
     // Instruction is a transmit instruction (has to be made invisible)
-    bool isTransmit() const { return staticInst->isLoad() || staticInst->isStore(); }
+    bool isMemTransmit() const { return staticInst->isLoad() || staticInst->isStore(); }
+    bool isOtherTransmit() const {
+        if (cpu->moreTransmitInsts == 1) {
+            if (opClass() == IntDivOp   ||
+                opClass() == FloatDivOp ||
+                opClass() == FloatSqrtOp)
+            return true;
+        }
+        else if (cpu->moreTransmitInsts == 2) {
+            if (opClass() == IntDivOp ||
+                isFloating())
+                return true;
+        }
+        return false;
+    }
 
     // add block attribute for synamic instruction type [mengjia]
     bool isBlock()  const { return staticInst->isBlock(); }

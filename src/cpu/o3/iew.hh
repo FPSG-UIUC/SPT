@@ -270,10 +270,6 @@ class DefaultIEW
      */
     void writebackInsts();
 
-    /** [Jiyong,DDIFT] wakeup untaint insts **/
-    /** after writebackInsts and try to wake untaint instrs **/
-    void wakeUntaintInsts();
-
     /** Returns the number of valid, non-squashed instructions coming from
      * rename to dispatch.
      */

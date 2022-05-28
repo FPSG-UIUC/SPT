@@ -1120,6 +1120,10 @@ InstructionQueue<Impl>::wakeUntaintInsts()
                 it = stalledTaintedInstList[tid].erase(it);
             }
             else if (inst->readyToIssue_UT()) {
+                if (cpu->isInstTracked(inst)) {
+                    printf("[%06lx] non-mem transmit %lx.%lx is ready to issue\n",
+                        (uint64_t)cpu->numCycles.value(), inst->instAddr(), inst->seqNum);
+                }
                 inst->removeFromStallList();
                 addIfReady(inst);
                 it = stalledTaintedInstList[tid].erase(it);
@@ -1131,6 +1135,25 @@ InstructionQueue<Impl>::wakeUntaintInsts()
     }
 
     DPRINTF(IQ, "wakeUntaintInsts done.\n");
+}
+
+/* [Rutvik, SPT] Untaint non-memory transmitters that have reached the VP */
+template <class Impl>
+void
+InstructionQueue<Impl>::updateVisibleState()
+{
+    list<ThreadID>::iterator threads = activeThreads->begin();
+    list<ThreadID>::iterator end     = activeThreads->end();
+
+    while (threads != end) {
+        ThreadID tid = *threads++;
+        for(auto it = instList[tid].begin(); it != instList[tid].end(); it++) {
+            DynInstPtr inst = *it;
+            if (inst->isOtherTransmit() && inst->isUnsquashable()) {
+                cpu->untaintOtherTransmit(inst);
+            }
+        }
+    }
 }
 
 template <class Impl>
@@ -1577,6 +1600,12 @@ InstructionQueue<Impl>::addIfReady(DynInstPtr &inst)
                     "the ready list, PC %s opclass:%i [sn:%lli].\n",
                     inst->pcState(), op_class, inst->seqNum);
 
+            // [Rutvik, SPT] Inst tracking stuff
+            if (cpu->isInstTracked(inst)) {
+                printf("[%06lx] adding %lx.%lx to ready list\n",
+                    (uint64_t)cpu->numCycles.value(), inst->instAddr(), inst->seqNum);
+            }
+
             readyInsts[op_class].push(inst);
             instsSetReady++;
 
@@ -1591,6 +1620,11 @@ InstructionQueue<Impl>::addIfReady(DynInstPtr &inst)
             }
         } else if (inst->readyToIssue()) {
             if (!inst->isInStallList()) {
+                // [Rutvik, SPT] Inst tracking stuff
+                if (cpu->isInstTracked(inst)) {
+                    printf("[%06lx] stalling non-mem transmit %lx.%lx\n",
+                        (uint64_t)cpu->numCycles.value(), inst->instAddr(), inst->seqNum);
+                }
                 inst->addToStallList();
                 stalledTaintedInstList[inst->threadNumber].push_back(inst);
                 instsStalledBeforeSetReady++;

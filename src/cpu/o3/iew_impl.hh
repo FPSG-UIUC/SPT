@@ -1525,13 +1525,6 @@ DefaultIEW<Impl>::writebackInsts()
     }
 }
 
-template <class Impl>
-void
-DefaultIEW<Impl>::wakeUntaintInsts()
-{
-    instQueue.wakeUntaintInsts();
-}
-
 template<class Impl>
 void
 DefaultIEW<Impl>::tick()
@@ -1561,14 +1554,16 @@ DefaultIEW<Impl>::tick()
     }
 
     ldstQueue.updateVisibleState();
+    instQueue.updateVisibleState();
 
     if (exeStatus != Squashing) {
         executeInsts();
 
         writebackInsts();
 
-        if (cpu->applyDDIFT && cpu->moreTransmitInsts)
-            wakeUntaintInsts();
+        if (cpu->applyDDIFT && cpu->moreTransmitInsts) {
+            instQueue.wakeUntaintInsts();
+        }
 
         // Have the instruction queue try to schedule any ready instructions.
         // (In actuality, this scheduling is for instructions that will
