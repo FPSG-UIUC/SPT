@@ -22,8 +22,16 @@ args = parser.parse_args()
 
 if not os.path.isfile(args.executable):
     parser.error('argument to --executable must be a file that exists!')
+if args.threat_model and not args.enable_spt:
+    parser.error('can\'t specify --threat-model if --enable-spt isn\'t specified!')
+if args.untaint_method and not args.enable_spt:
+    parser.error('can\'t specify --untaint-method if --enable-spt isn\'t specified!')
+if args.enable_shadow_l1 and not args.enable_spt:
+    parser.error('can\'t specify --enable-shadow-l1 if --enable-spt isn\'t specified!')
+if args.enable_shadow_mem and not args.enable_spt:
+    parser.error('can\'t specify --enable-shadow-mem if --enable-spt isn\'t specified!')
 if args.track_insts and not args.enable_spt:
-    parser.error('can\'t specifiy --track-insts if --enable-spt isn\'t specified!')
+    parser.error('can\'t specify --track-insts if --enable-spt isn\'t specified!')
 apply_ddift = '1' if args.enable_spt else '0'
 if not args.enable_spt:
     threat_scheme = 'UnsafeBaseline'
