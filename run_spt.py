@@ -10,7 +10,7 @@ parser.add_argument('--threat-model',
     choices=['spectre', 'futuristic'],
     required='--enable-spt' in sys.argv)
 parser.add_argument('--untaint-method',
-    choices=['none', 'fwd', 'bwd', 'ideal'],
+    choices=['none', 'vp', 'fwd', 'bwd', 'ideal'],
     required='--enable-spt' in sys.argv)
 mutex_group = parser.add_mutually_exclusive_group()
 mutex_group.add_argument('--enable-shadow-l1', action='store_true')
