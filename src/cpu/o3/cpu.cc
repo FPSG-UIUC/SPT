@@ -2127,12 +2127,12 @@ FullO3CPU<Impl>::setPartialTaintVec(PhysRegIdPtr phys_reg, const BitVec& taintVe
     regFile.setPartialTaintVec(phys_reg, taintVec, size, offset);
 }
 
-/** Jiyong, Rutvik, SPT untaint when a transmitter passes VP */
+/** [Jiyong, Rutvik, SPT] Untaint when a memory transmitter passes VP */
 template <class Impl>
 void
-FullO3CPU<Impl>::untaintMemOp(DynInstPtr inst) {
+FullO3CPU<Impl>::untaintMemTransmit(DynInstPtr inst) {
     // must be a transmiter with tainted args
-    assert(inst->isTransmit());
+    assert(inst->isMemTransmit());
     assert(inst->isUnsquashable());
     assert(inst->isArgsTainted());
 
@@ -2204,6 +2204,22 @@ FullO3CPU<Impl>::untaintMemOp(DynInstPtr inst) {
         printf("ROB AFTER UNTAINTING:\n");
         rob.printForThread(inst->threadNumber, false, true);
     }
+}
+
+/** [Rutvik, SPT] Untaint when a non-memory transmitter passes VP */
+template <class Impl>
+void
+FullO3CPU<Impl>::untaintOtherTransmit(DynInstPtr inst) {
+    if (inst->isSquashed() ||
+        moreTransmitInsts == 0 ||
+        !inst->isOtherTransmit())
+        return;
+    // [Rutvik, SPT] Inst tracking stuff
+    if (isInstTracked(inst)) {
+        printf("[%06lx] non-mem transmit %lx.%lx is being untainted\n",
+            (uint64_t)numCycles.value(), inst->instAddr(), inst->seqNum);
+    }
+    inst->setArgsTaint(false);
 }
 
 template <class Impl>

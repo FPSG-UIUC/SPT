@@ -233,6 +233,9 @@ class InstructionQueue
     /** Used because wakeDependents cannot set readyToIssue if argsTainted **/
     void wakeUntaintInsts();
 
+    /* [Rutvik, SPT] Untaint non-mem transmitters that have reached the VP */
+    void updateVisibleState();
+
     /** Adds a ready memory instruction to the ready list. */
     void addReadyMemInst(DynInstPtr &ready_inst);
 

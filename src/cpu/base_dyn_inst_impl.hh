@@ -288,20 +288,8 @@ bool
 BaseDynInst<Impl>::readyToIssue_UT() const
 {
     bool ret = status[CanIssue];
-    if (cpu->moreTransmitInsts == 1) {
-        // consider int div and fp div
-        if (opClass() == IntDivOp   ||
-            opClass() == FloatDivOp ||
-            opClass() == FloatSqrtOp)
-            ret = ret && !isArgsTainted();
-    }
-    else if (cpu->moreTransmitInsts == 2) {
-        if (opClass() == IntDivOp ||
-            isFloating())
-            ret = ret && !isArgsTainted();
-    }
-    else {
-        assert (0);
+    if (isOtherTransmit()) {
+        ret = ret && !isArgsTainted();
     }
     return ret;
 }

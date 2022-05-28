@@ -490,8 +490,11 @@ class FullO3CPU : public BaseO3CPU
         regFile.resetUntaintMethod(phys_reg);
     }
 
-    /** [Jiyong, Rutvik, SPT] Untaint when a transmitter passes VP */
-    void untaintMemOp(DynInstPtr inst);
+    /** [Jiyong, Rutvik, SPT] Untaint when a memory transmitter passes VP */
+    void untaintMemTransmit(DynInstPtr inst);
+
+    /** [Rutvik, SPT] Untaint when a non-memory transmitter passes VP */
+    void untaintOtherTransmit(DynInstPtr inst);
 
     uint64_t readArchIntReg(int reg_idx, ThreadID tid);
 
