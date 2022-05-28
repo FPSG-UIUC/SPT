@@ -225,6 +225,12 @@ ROB<Impl>::insertInst(DynInstPtr &inst)
 
     ThreadID tid = inst->threadNumber;
 
+    if (cpu->isInstTracked(inst)) {
+        printf("[%06lx] %lx.%lx inserted into ROB\n",
+            (uint64_t)cpu->numCycles.value(), inst->instAddr(), inst->seqNum);
+        printf("           %s\n", inst->toString().c_str());
+    }
+
     std::string reasonForTainting;
     auto newlyTaintedDestRegPairs = inst->getUntaintedDestRegs();
 
@@ -233,7 +239,7 @@ ROB<Impl>::insertInst(DynInstPtr &inst)
         // Access instructions always taint their destination (regardless of speculative or not)
         inst->setDestTaint(true);
         reasonForTainting = "being an access";
-        if (inst->isArgsTainted()) reasonForTainting += "\n            (it also has tainted args)";
+        if (inst->isArgsTainted()) reasonForTainting += "\n           (it also has tainted args)";
     }
     else if (inst->isArgsTainted()) {
         // Taint destination if any argument is tainted
@@ -249,7 +255,7 @@ ROB<Impl>::insertInst(DynInstPtr &inst)
         bool printTaintedSrcs = false;
          // [Rutvik, SPT] Inst tracking stuff
         if (cpu->isInstTracked(inst)) {
-            printf("[%06lx] %lx.%lx inserted into ROB and dest tainted due to %s\n",
+            printf("[%06lx] %lx.%lx dest tainted due to %s\n",
                 (uint64_t)cpu->numCycles.value(), inst->instAddr(), inst->seqNum, reasonForTainting.c_str());
             printf("           newly tainted dest: ");
             for (auto regPair : newlyTaintedDestRegPairs) {
