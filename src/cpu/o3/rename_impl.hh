@@ -1177,8 +1177,13 @@ DefaultRename<Impl>::renameDestRegs(DynInstPtr &inst, ThreadID tid)
 
         ++renameRenamedOperands;
 
-        // [Rutvik, SPT] When an inst is renamed, its dest regs start out with a clean slate
-        cpu->setTaint(rename_result.first, false);
+	// [SPT]
+	// Initial tainting/untainting is actually performed next cycle when the instruction
+	// enters the ROB. However, there are some cases (e.g., due to a fault handled at
+	// commit) where an instruction may not enter the ROB but still get issued/executed.
+	// So, to be safe, conservatively mark the destination register as tainted to start.
+	// It will be properly tainted/untainted once it enters the ROB next cycle.
+        cpu->setTaint(rename_result.first, true);
     }
 }
 
