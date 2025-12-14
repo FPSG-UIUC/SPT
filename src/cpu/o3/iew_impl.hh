@@ -1390,7 +1390,19 @@ DefaultIEW<Impl>::executeInsts()
         // instruction first, so the branch resolution order will be correct.
         ThreadID tid = inst->threadNumber;
 
-        if (!fetchRedirect[tid] ||
+
+	if (inst->isControl() && inst->mispredicted() && inst->isArgsTainted() && !inst->isUnsquashable()) {
+	    // The instruction is a branch which was mispredicted but tainted.
+	    // In order to avoid this tainted mispredicted branch from hiding
+	    // a younger *untainted* branch misprediction (which would create
+	    // a secret-dependent squash signal), instead just directly mark
+	    // this instruction as having a pending squash. This is functionally
+	    // equivalent to sending all tainted branch mispredictions to the
+	    // commit stage.
+	    DPRINTF(IEW, "[tid:%i] [sn:%llu] Execute: Tainted branch misprediction detected.\n",
+		  tid, inst->seqNum);
+	    inst->hasPendingSquash(true);
+	} else if (!fetchRedirect[tid] ||
             !toCommit->squash[tid] ||
             toCommit->squashedSeqNum[tid] > inst->seqNum) {
 
