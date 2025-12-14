@@ -350,6 +350,14 @@ BaseDynInst<Impl>::setDestTaint(bool f)
             (cpu->untaintTier >= 2 && archReg.index() == X86ISA::INTREG_RDI));
         bool newTaint = (uncondUntaint) ? false : f;
         cpu->setPartialTaint(_destRegIdx[i], newTaint, szAndOffs.first, szAndOffs.second);
+
+	// On x86, writes to 32-bit subregisters (e.g., EAX) zero the upper
+	// 32 bits of the full 64-bit register (e.g., RAX). So, we can safely
+	// untaint all 64 bits for 32-bit register writes.
+	if (archReg.classValue() == IntRegClass && szAndOffs.first == 4 &&
+	    szAndOffs.second == 0) {
+	    cpu->setPartialTaint(_destRegIdx[i], false, 4, 4);
+	}
     }
 }
 
@@ -369,6 +377,14 @@ BaseDynInst<Impl>::setDestIdxTaintVec(int i, const BitVec& taintVec)
     }
     else {
         cpu->setPartialTaintVec(_destRegIdx[i], taintVec, szAndOffs.first, szAndOffs.second);
+    }
+
+    // On x86, writes to 32-bit subregisters (e.g., EAX) zero the upper
+    // 32 bits of the full 64-bit register (e.g., RAX). So, we can safely
+    // untaint all 64 bits for 32-bit register writes.
+    if (archReg.classValue() == IntRegClass && szAndOffs.first == 4 &&
+	szAndOffs.second == 0) {
+        cpu->setPartialTaint(_destRegIdx[i], false, 4, 4);
     }
 }
 
